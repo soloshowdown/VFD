@@ -1,43 +1,84 @@
-# train_model.py
+
+
 import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score, classification_report, confusion_matrix
+)
 import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# --- Step 1: Load Dataset ---
-df = pd.read_csv("data.csv")
 
-# --- Step 2: Drop unnecessary column ---
-df_model = df.drop(columns=['id'])
+df = pd.read_csv('data.csv')
 
-# --- Step 3: Encode categorical columns ---
-# Gender: Male=1, Female=0
-df_model['Gender'] = LabelEncoder().fit_transform(df_model['Gender'])
+print("✅ Data loaded successfully!")
+print(f"Dataset shape: {df.shape}")
+print(df.head())
 
-# Vehicle_Damage: Yes=1, No=0
-df_model['Vehicle_Damage'] = LabelEncoder().fit_transform(df_model['Vehicle_Damage'])
 
-# Vehicle_Age: <1 Year=0, 1-2 Year=1, >2 Years=2
-df_model['Vehicle_Age'] = df_model['Vehicle_Age'].replace({'< 1 Year':0, '1-2 Year':1, '> 2 Years':2})
+label_encoders = {}
+categorical_columns = ['Gender', 'Vehicle_Age', 'Vehicle_Damage']
 
-# --- Step 4: Split features and target ---
-X = df_model.drop('Response', axis=1)
-y = df_model['Response']
+for col in categorical_columns:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col])
+    label_encoders[col] = le
 
-# --- Step 5: Scale features ---
+print("\n✅ Categorical columns encoded successfully!")
+
+
+X = df.drop(['Response', 'id'], axis=1)
+y = df['Response']
+
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print("\n✅ Data split complete!")
+print(f"Training samples: {X_train.shape[0]}")
+print(f"Testing samples: {X_test.shape[0]}")
+
+
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
-# --- Step 6: Train Random Forest Model (smaller size) ---
+
 model = RandomForestClassifier(
-    n_estimators=50,   # smaller number of trees
-    max_depth=10,      # limit tree depth
+    n_estimators=50,
+    max_depth=10,
     random_state=42
 )
-model.fit(X_scaled, y)
 
-# --- Step 7: Save trained model and scaler ---
+model.fit(X_train_scaled, y_train)
+print("\n✅ Model training complete!")
+
+
+y_pred = model.predict(X_test_scaled)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"\n🎯 Model Accuracy: {accuracy:.2f}")
+
+# Detailed metrics
+print("\n📊 Classification Report:")
+print(classification_report(y_test, y_pred))
+
+# Confusion Matrix Visualization
+plt.figure(figsize=(5, 4))
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.tight_layout()
+plt.show()
+
+
 joblib.dump(model, 'vehicle_insurance_model.pkl')
 joblib.dump(scaler, 'scaler.pkl')
+joblib.dump(label_encoders, 'label_encoders.pkl')
 
-print("✅ Model and scaler saved successfully!")
+print("\n💾 Model and encoders saved successfully!")

@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 # --- Page Config ---
 st.set_page_config(page_title="Vehicle Insurance Analytics", layout="wide")
-st.title("🚗 Interactive Vehicle Insurance Prediction & Dashboard")
+st.title("🚗 Vehicle Insurance Prediction & Dashboard")
 
 # --- Load Dataset ---
 @st.cache_data
@@ -27,9 +27,12 @@ st.sidebar.header("Enter Your Details")
 def user_input_features():
     Gender = st.sidebar.selectbox("Gender", ("Male", "Female"))
     Age = st.sidebar.slider("Age", 18, 100, 30)
-    Driving_License = st.sidebar.selectbox("Driving License", (0, 1))
+    
+    # ✅ Updated Yes/No dropdowns
+    Driving_License = st.sidebar.selectbox("Has Driving License?", ("Yes", "No"))
+    Previously_Insured = st.sidebar.selectbox("Previously Insured?", ("Yes", "No"))
+    
     Region_Code = st.sidebar.number_input("Region Code", min_value=1, max_value=50, value=10)
-    Previously_Insured = st.sidebar.selectbox("Previously Insured", (0, 1))
     Vehicle_Age = st.sidebar.selectbox("Vehicle Age", ("< 1 Year", "1-2 Year", "> 2 Years"))
     Vehicle_Damage = st.sidebar.selectbox("Vehicle Damage", ("Yes", "No"))
     Annual_Premium = st.sidebar.number_input("Annual Premium", min_value=1000, max_value=100000, value=30000)
@@ -39,9 +42,9 @@ def user_input_features():
     data = {
         "Gender": Gender,
         "Age": Age,
-        "Driving_License": Driving_License,
+        "Driving_License": 1 if Driving_License == "Yes" else 0,
         "Region_Code": Region_Code,
-        "Previously_Insured": Previously_Insured,
+        "Previously_Insured": 1 if Previously_Insured == "Yes" else 0,
         "Vehicle_Age": Vehicle_Age,
         "Vehicle_Damage": Vehicle_Damage,
         "Annual_Premium": Annual_Premium,
@@ -74,7 +77,7 @@ fig_meter = go.Figure(go.Indicator(
     value = prediction_proba*100,
     title = {'text': "Insurance Probability (%)"},
     gauge = {'axis': {'range': [0, 100]},
-             'bar': {'color': "teal"},
+             'bar': {'color': "white"},
              'steps' : [
                  {'range': [0, 30], 'color': "red"},
                  {'range': [30, 70], 'color': "yellow"},
