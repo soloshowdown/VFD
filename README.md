@@ -66,20 +66,20 @@ The dataset contains synthetic records of customers with features like age, gend
 ## 🖼️ Project Images
 
 <p align="center">
-  <img src="images/image1.png" width="30%" style="margin: 5px;">
-  <img src="images/image2.png" width="30%" style="margin: 5px;">
-  <img src="images/image3.png" width="30%" style="margin: 5px;">
+  <img src="images/img1.png" width="30%" style="margin: 5px;">
+  <img src="images/img2.png" width="30%" style="margin: 5px;">
+  <img src="images/img3.png" width="30%" style="margin: 5px;">
 </p>
 
 <p align="center">
-  <img src="images/image4.png" width="30%" style="margin: 5px;">
-  <img src="images/image5.png" width="30%" style="margin: 5px;">
-  <img src="images/image6.png" width="30%" style="margin: 5px;">
+  <img src="images/img4.png" width="30%" style="margin: 5px;">
+  <img src="images/img5.png" width="30%" style="margin: 5px;">
+  <img src="images/img6.png" width="30%" style="margin: 5px;">
 </p>
 
 <p align="center">
-  <img src="images/image7.png" width="30%" style="margin: 5px;">
-  <img src="images/image8.png" width="30%" style="margin: 5px;">
-  <img src="images/image9.png" width="30%" style="margin: 5px;">
+  <img src="images/img7.png" width="30%" style="margin: 5px;">
+  <img src="images/img8.png" width="30%" style="margin: 5px;">
+  <img src="images/img9.png" width="30%" style="margin: 5px;">
 </p>
 
